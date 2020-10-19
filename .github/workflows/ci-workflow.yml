@@ -3,6 +3,26 @@ name: CI Workflow
 on: [push, pull_request]
 
 jobs:
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Build
+      run: make -f Bootstrap.mak linux CONFIG=release
+    - name: Test
+      run: bin/release/premake5 test --test-all
+    - name: Push SHA to Docker Hub
+      uses: opspresso/action-docker@v0.2.13
+      with:
+        args: --docker
+      env:
+        USERNAME: ${{ secrets.DOCKER_USERNAME }}
+        PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        DOCKERFILE: Dockerfile
+        IMAGE_NAME: premake
+        TAG_NAME: ${{ GITHUB_SHA }}
+        LATEST: false
   linux:
     runs-on: ubuntu-latest
     strategy:
