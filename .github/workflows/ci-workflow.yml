@@ -21,7 +21,7 @@ jobs:
         PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
         DOCKERFILE: Dockerfile
         IMAGE_NAME: premake
-        TAG_NAME: ${{ github.sha }}
+        TAG_NAME: ${{ github.run_number }}
         LATEST: false
   linux:
     runs-on: ubuntu-latest
